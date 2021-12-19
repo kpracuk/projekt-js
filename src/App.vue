@@ -1,5 +1,6 @@
 <template>
   <UiNavbar />
+  <RouterView />
 </template>
 
 <script lang="ts" setup>
