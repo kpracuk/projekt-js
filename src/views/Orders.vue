@@ -6,7 +6,7 @@
           class="flex gap-x-1 bg-gray-800 rounded-md px-2 py-1"
           :class="{ 'text-blue-500': data.sorting.property === property }"
           @click="setSorting(property)"
-          v-for="(title, property) in {name: 'Nazwa', available: 'Ilość dostępnych', price: 'Cena'}"
+          v-for="(title, property) in {productName: 'Nazwa Produktu', price: 'Cena', date: 'Data'}"
           :key="property"
         >
           <span class="font-bold">{{ title }}</span>
@@ -20,12 +20,12 @@
           </span>
         </button>
       </div>
-      <UiProduct
-        v-for="(product, key) in sortedProducts"
+      <UiOrder
+        v-for="(order, key) in sortedOrders"
         :key="key"
-        :name="product.name"
-        :available="product.available"
-        :price="product.price"
+        :product-name="order.productName"
+        :price="order.price"
+        :date="order.date"
       />
     </div>
   </div>
@@ -33,48 +33,43 @@
 
 <script lang="ts" setup>
   import {computed, reactive} from 'vue';
-  import UiProduct from "../components/ui/UiProduct.vue";
+  import UiOrder from "../components/ui/UiOrder.vue";
 
   const data = reactive({
     sorting: {
-      property: '',
-      mode: ''
+      property: 'date',
+      mode: 'desc'
     } as { property: string, mode: string },
-    products: [
+    orders: [
       {
-        name: 'Nazwa Produktu 1',
-        available: 23,
-        price: 123
+        productName: 'Nazwa Produktu 1',
+        price: 123,
+        date: '12-12-2020 12:45:32'
       },
       {
-        name: 'Nazwa Produktu 2',
-        available: 123,
-        price: 343445
+        productName: 'Nazwa Produktu 2',
+        price: 132323,
+        date: '12-10-2020 07:45:32'
       },
       {
-        name: 'Nazwa Produktu 3',
-        available: 43,
-        price: 1234125
-      },
-      {
-        name: 'Nazwa Produktu 4',
-        available: 1,
-        price: 1233
+        productName: 'Nazwa Produktu 3',
+        price: 1223,
+        date: '01-12-2020 13:45:32'
       }
     ] as { [key: string]: string|number }[]
   })
 
-  const sortedProducts = computed(() => {
+  const sortedOrders = computed(() => {
     const property = data.sorting.property
     const mode = data.sorting.mode
-    const products = [...data.products]
+    const orders = [...data.orders]
 
     if(!property) {
-      return products
+      return orders
     }
 
     if(mode === 'asc') {
-      return products.sort((a, b) => {
+      return orders.sort((a, b) => {
         if(a[property] > b[property]) {
           return 1
         } else if (b[property] > a[property]) {
@@ -86,7 +81,7 @@
     }
 
     if(mode === 'desc') {
-      return products.sort((a, b) => {
+      return orders.sort((a, b) => {
         if(a[property] > b[property]) {
           return -1
         } else if (b[property] > a[property]) {
