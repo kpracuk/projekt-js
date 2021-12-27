@@ -23,17 +23,26 @@
           </div>
         </div>
       </div>
-      <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+      <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0" v-if="authStore.isLoggedIn">
         <div class="ml-3 relative">
           <div>
             <button class="transition px-4 py-2 text-white flex text-sm rounded focus:outline-none focus:bg-gray-900" @click="data.isUserDropdownActive = !data.isUserDropdownActive">
-              Użytkownik
+              {{ authStore.getUser.name }}
             </button>
           </div>
           <div class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" v-if="data.isUserDropdownActive">
             <a href="#" class="block px-4 py-2 text-sm font-bold text-gray-700">Profil</a>
             <hr class="border-gray-200">
             <a href="#" class="block px-4 py-2 text-sm font-bold text-red-400">Wyloguj</a>
+          </div>
+        </div>
+      </div>
+      <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0" v-else>
+        <div class="ml-3 relative">
+          <div>
+            <RouterLink to="/login" class="transition px-4 py-2 text-white flex text-sm rounded focus:outline-none focus:bg-gray-900">
+              Zaloguj się
+            </RouterLink>
           </div>
         </div>
       </div>
@@ -49,6 +58,9 @@
 
 <script lang="ts" setup>
 import { reactive } from 'vue';
+import { useAuthStore } from "../../store/modules/auth";
+
+const authStore = useAuthStore()
 
 const data = reactive({
   isUserDropdownActive: false
