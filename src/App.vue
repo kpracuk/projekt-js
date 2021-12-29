@@ -5,6 +5,12 @@
 
 <script lang="ts" setup>
 import UiNavbar from './components/ui/UiNavbar.vue';
+import { onBeforeMount } from "vue";
+import { csrf } from "./api/endpoints/csrf";
+
+onBeforeMount(() => {
+  csrf()
+})
 </script>
 
 <style lang=postcss>
