@@ -1,6 +1,7 @@
 <template>
   <UiNavbar />
   <RouterView />
+  <notifications position="bottom right" />
 </template>
 
 <script lang="ts" setup>
