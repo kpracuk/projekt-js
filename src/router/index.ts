@@ -7,17 +7,15 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  if(to.meta?.middleware) {
+router.beforeEach((to, from) => {
+  if (to.meta?.middleware) {
     const middleware = to.meta.middleware as Middleware
-    if(middleware.handler()){
-      next(middleware.onSuccess())
-    } else {
-      next(middleware.onFailure())
+    const redirect = middleware.handler() ? middleware.onSuccess() : middleware.onFailure()
+    if (redirect) {
+      return redirect
     }
-    return
   }
-  next()
+  return
 })
 
 export { router }
