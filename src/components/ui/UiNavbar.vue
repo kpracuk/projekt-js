@@ -15,7 +15,7 @@
       </div>
       <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
         <RouterLink to="/" class="flex items-center text-2xl font-bold text-blue-500">
-          SKLEP
+          JG
         </RouterLink>
         <div class="hidden sm:block sm:ml-6">
           <div class="flex space-x-4">
