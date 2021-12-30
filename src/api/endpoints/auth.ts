@@ -25,3 +25,7 @@ export function getUser () {
   return axios.get('/auth/user')
 }
 
+// /auth/logout
+export function logout () {
+  return axios.post('/auth/logout')
+}

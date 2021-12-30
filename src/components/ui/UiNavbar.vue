@@ -33,7 +33,7 @@
           <div class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" v-if="data.isUserDropdownActive">
             <a href="#" class="block px-4 py-2 text-sm font-bold text-gray-700">Profil</a>
             <hr class="border-gray-200">
-            <a href="#" class="block px-4 py-2 text-sm font-bold text-red-400">Wyloguj</a>
+            <button href="#" class="w-full text-left block px-4 py-2 text-sm font-bold text-red-400" @click="attemptLogout()">Wyloguj</button>
           </div>
         </div>
       </div>
@@ -59,10 +59,38 @@
 <script lang="ts" setup>
 import { reactive } from 'vue';
 import { useAuthStore } from "../../store/modules/auth";
+import { useRouter } from "vue-router";
+import { logout } from "../../api/endpoints/auth";
+import { notify } from "@kyvg/vue3-notification";
 
 const authStore = useAuthStore()
+const router = useRouter()
 
 const data = reactive({
   isUserDropdownActive: false
 })
+
+const attemptLogout = () => {
+  console.log(router.currentRoute)
+  logout()
+    .then(() => {
+      data.isUserDropdownActive = false
+      authStore.setUser(null)
+      notify({
+        type: 'success',
+        title: "Wylogowano pomyślnie",
+        text: 'Mamy nadzieję, że jeszcze nas odwiedzisz',
+      });
+      if(router.currentRoute.value.path !== '/') {
+        router.push('/')
+      }
+    })
+    .catch((error) => {
+      notify({
+        type: 'error',
+        title: "Wystąpił błąd",
+        text: error.response?.data?.message || 'Przepraszamy za problemy techniczne',
+      });
+    })
+}
 </script>
