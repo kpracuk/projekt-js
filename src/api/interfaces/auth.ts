@@ -22,3 +22,14 @@ export interface RegisterUserRequest {
   password: string,
   password_confirmation: string
 }
+
+export interface ProfileInformation {
+  name: string,
+  email: string
+}
+
+export interface UserPasswordUpdate {
+  current_password: string,
+  password: string,
+  password_confirmation: string
+}
