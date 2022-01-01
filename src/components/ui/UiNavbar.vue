@@ -19,7 +19,7 @@
         </RouterLink>
         <div class="hidden sm:block sm:ml-6">
           <div class="flex space-x-4">
-            <a href="#" class="transition text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Produkty</a>
+            <router-link to="/products" class="transition text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Produkty</router-link>
           </div>
         </div>
       </div>
@@ -34,7 +34,7 @@
             </button>
           </div>
           <div class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" v-if="data.isUserDropdownActive">
-            <a href="#" class="block px-4 py-2 text-sm font-bold text-gray-700">Profil</a>
+            <router-link to="/profile" class="block px-4 py-2 text-sm font-bold text-gray-700" @click="data.isUserDropdownActive = false">Profil</router-link>
             <hr class="border-gray-200">
             <button href="#" class="w-full text-left block px-4 py-2 text-sm font-bold text-red-400" @click="attemptLogout()">Wyloguj</button>
           </div>
@@ -53,7 +53,7 @@
   </div>
   <div class="sm:hidden">
     <div class="px-2 pt-2 pb-3 space-y-1">
-      <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Produkty</a>
+      <router-link to="/products" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Produkty</router-link>
     </div>
   </div>
 </nav>
