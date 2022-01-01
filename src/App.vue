@@ -1,9 +1,7 @@
 <template>
-  <main class="min-h-screen flex flex-col bg-gray-900 text-white">
-    <UiNavbar />
-    <RouterView />
-    <notifications position="bottom right" />
-  </main>
+  <UiNavbar />
+  <RouterView />
+  <notifications position="bottom right" />
 </template>
 
 <script lang="ts" setup>

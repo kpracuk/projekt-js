@@ -26,3 +26,7 @@ getCsrfToken()
         app.mount('#app')
       })
   })
+  .catch(error => {
+    const event = new Event('app.api.getCsrfToken.error')
+    window.dispatchEvent(event)
+  })
