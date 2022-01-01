@@ -6,7 +6,7 @@
           class="flex gap-x-1 bg-gray-800 rounded-md px-2 py-1"
           :class="{ 'text-blue-500': data.sorting.property === property }"
           @click="setSorting(property)"
-          v-for="(title, property) in {name: 'Nazwa', available: 'Ilość dostępnych', price: 'Cena'}"
+          v-for="(title, property) in data.sorting.properties"
           :key="property"
         >
           <span class="font-bold">{{ title }}</span>
@@ -20,51 +20,68 @@
           </span>
         </button>
       </div>
+      <div class="flex justify-center mb-2" v-if="data.loading">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 animate-spin" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+        </svg>
+      </div>
       <UiProduct
         v-for="(product, key) in sortedProducts"
         :key="key"
         :name="product.name"
-        :available="product.available"
+        :description="product.description"
+        :quantity="product.quantity"
         :price="product.price"
+        v-else-if="sortedProducts.length"
       />
+      <div class="flex justify-center mb-2 text-gray-500 font-bold" v-else>
+        Brak dostępnych produktów
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import {computed, reactive} from 'vue';
+  import { computed, onMounted, reactive } from 'vue';
+  import { getProducts } from "../api/endpoints/products";
   import UiProduct from "../components/ui/UiProduct.vue";
+  import { Product } from "../api/interfaces/products";
+  import {notify} from "@kyvg/vue3-notification";
 
   const data = reactive({
+    loading: true,
     sorting: {
       property: '',
-      mode: ''
-    } as { property: string, mode: string },
-    products: [
-      {
-        name: 'Nazwa Produktu 1',
-        available: 23,
-        price: 123
-      },
-      {
-        name: 'Nazwa Produktu 2',
-        available: 123,
-        price: 343445
-      },
-      {
-        name: 'Nazwa Produktu 3',
-        available: 43,
-        price: 1234125
-      },
-      {
-        name: 'Nazwa Produktu 4',
-        available: 1,
-        price: 1233
+      mode: '',
+      properties: {
+        name: 'Nazwa',
+        quantity: 'Ilość dostępnych',
+        price: 'Cena'
       }
-    ] as { [key: string]: string|number }[]
+    },
+    products: [] as Product[]
   })
 
-  const sortedProducts = computed(() => {
+
+  onMounted(() => {
+    getProducts()
+      .then(response => {
+        data.products = response.data
+      })
+      .catch(error => {
+        data.products = []
+        notify({
+          type: 'error',
+          title: 'Wystąpił błąd',
+          text: 'Nie udało się pobrać produktów'
+        })
+      })
+    .finally(() => {
+      data.loading = false
+    })
+  })
+
+  const sortedProducts = computed((): Product[] => {
     const property = data.sorting.property
     const mode = data.sorting.mode
     const products = [...data.products]
@@ -96,6 +113,7 @@
         }
       })
     }
+    return products
   })
 
   const setSorting = (parameter: string) => {
