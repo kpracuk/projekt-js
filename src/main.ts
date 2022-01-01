@@ -6,8 +6,7 @@ import './main.css'
 
 import { router } from './router'
 import { store } from "./store";
-import { csrf } from "./api/endpoints/csrf";
-import { getUser } from "./api/endpoints/auth";
+import { getCsrfToken, getUser } from "./api/endpoints/auth";
 import { useAuthStore } from "./store/modules/auth";
 
 const app = createApp(App)
@@ -15,7 +14,7 @@ const app = createApp(App)
 app.use(store)
 const authStore = useAuthStore()
 
-csrf()
+getCsrfToken()
   .then(() => {
     getUser()
       .then(response => {

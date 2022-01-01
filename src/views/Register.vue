@@ -12,7 +12,7 @@
 
 <script lang="ts" setup>
   import { reactive } from 'vue';
-  import { getUser, register } from "../api/endpoints/auth";
+  import { getUser, registerUser } from "../api/endpoints/auth";
   import { useAuthStore } from "../store/modules/auth";
   import { notify } from "@kyvg/vue3-notification";
 
@@ -37,7 +37,7 @@
     data.errors = Object.assign({})
     data.errorMessage = null
     data.isLoading = true
-    register(data)
+    registerUser(data)
       .then((response) => {
         notify({
           type: 'success',

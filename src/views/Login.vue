@@ -13,7 +13,7 @@
 
 <script lang="ts" setup>
 import { reactive } from 'vue';
-import { getUser, login } from "../api/endpoints/auth";
+import { getUser, loginUser } from "../api/endpoints/auth";
 import { useAuthStore } from "../store/modules/auth";
 import { notify } from "@kyvg/vue3-notification";
 
@@ -36,7 +36,7 @@ const attemptLogin = () => {
   data.errors = Object.assign({})
   data.errorMessage = null
   data.isLoading = true
-  login(data)
+  loginUser(data)
     .then((response) => {
       getUser()
         .then(response => {

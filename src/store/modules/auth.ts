@@ -1,9 +1,8 @@
 import { defineStore } from "pinia";
+import { User } from "../../api/interfaces/auth";
 
 interface authState {
-  user: {
-    name: string
-  } | null
+  user: User | null
 }
 
 export const useAuthStore = defineStore('auth', {

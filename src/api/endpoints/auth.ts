@@ -1,31 +1,23 @@
 import axios from "../axios"
+import { AxiosResponse } from "axios";
+import { User, LoginUserRequest, RegisterUserRequest, LoginUserResponse } from "../interfaces/auth";
 
-// /auth/register
-export interface RegisterUserRequest {
-  name: string,
-  email: string,
-  password: string,
-  password_confirmation: string
-}
-export function register (userData: RegisterUserRequest) {
-  return axios.post('/auth/register', userData)
+export function getCsrfToken (): Promise<AxiosResponse<''>> {
+  return axios.get('/auth/csrf-cookie')
 }
 
-// /auth/login
-export interface LoginUserRequest {
-  email: string,
-  password: string
-}
-export function login (userData: LoginUserRequest) {
-  return axios.post('/auth/login', userData)
-}
-
-// /auth/user
-export function getUser () {
+export function getUser (): Promise<AxiosResponse<User>> {
   return axios.get('/auth/user')
 }
 
-// /auth/logout
-export function logout () {
+export function loginUser (userData: LoginUserRequest): Promise<AxiosResponse<LoginUserResponse>> {
+  return axios.post('/auth/login', userData)
+}
+
+export function registerUser (userData: RegisterUserRequest): Promise<AxiosResponse<''>> {
+  return axios.post('/auth/register', userData)
+}
+
+export function logoutUser (): Promise<AxiosResponse<''>> {
   return axios.post('/auth/logout')
 }

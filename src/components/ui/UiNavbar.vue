@@ -63,7 +63,7 @@
 import { reactive } from 'vue';
 import { useAuthStore } from "../../store/modules/auth";
 import { useRouter } from "vue-router";
-import { logout } from "../../api/endpoints/auth";
+import { logoutUser } from "../../api/endpoints/auth";
 import { notify } from "@kyvg/vue3-notification";
 
 const authStore = useAuthStore()
@@ -74,8 +74,7 @@ const data = reactive({
 })
 
 const attemptLogout = () => {
-  console.log(router.currentRoute)
-  logout()
+  logoutUser()
     .then(() => {
       data.isUserDropdownActive = false
       authStore.setUser(null)
