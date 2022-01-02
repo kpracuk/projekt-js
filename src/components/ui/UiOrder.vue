@@ -2,16 +2,26 @@
   <div class="flex justify-between w-full p-4 bg-gray-900 rounded-md">
     <div class="flex flex-col">
       <span class="text-xl font-bold">
-        {{ productName }}
+        {{ productName }} <span class="text-gray-500 font-normal text-lg">x{{ quantity }}</span>
       </span>
     </div>
     <div class="flex items-center gap-x-4">
-      <span>
-        {{ (price / 100).toFixed(2) }} PLN
-      </span>
-      <span>
-        {{ date }}
-      </span>
+      <div class="flex flex-col items-end">
+        <span>
+          {{ (getFullPrice() / 100).toFixed(2) }} PLN
+        </span>
+        <span class="text-gray-500 text-sm font-bold">
+          {{ (price / 100).toFixed(2) }} PLN x {{ quantity }}
+        </span>
+      </div>
+      <div class="flex flex-col items-end">
+        <span>
+          {{ getFormattedDate() }}
+        </span>
+        <span :class="getStatusColor()">
+          {{ getTranslatedStatus() }}
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -20,6 +30,51 @@
   const props = defineProps({
     productName: String,
     price: Number,
-    date: String
+    quantity: Number,
+    date: String,
+    status: String
   })
+
+  const getFormattedDate = () => {
+    if(props.date) {
+      const date = (new Date(props.date)).toISOString().split('T')
+      return date[0] + ' ' + date[1].slice(0, -5)
+    }
+    return null
+  }
+
+  const getFullPrice = () => {
+    if(props.price && props.quantity) {
+      return props.price * props.quantity
+    }
+    return 0
+  }
+
+  const getTranslatedStatus = () => {
+    const translations = {
+      placed: 'Złożone',
+      confirmed: 'Potwierdzone',
+      in_progress: 'W realizacji',
+      waiting_for_transport: 'Czeka na transport',
+      sent: 'Wysłane',
+      delivered: 'Dostarczone'
+    }
+
+    // @ts-ignore
+    return translations[props.status]
+  }
+
+  const getStatusColor = () => {
+    const colors = {
+      placed: 'text-white',
+      confirmed: 'text-violet-500',
+      in_progress: 'text-yellow-500',
+      waiting_for_transport: 'text-cyan-500',
+      sent: 'text-lime-500',
+      delivered: 'text-green-500'
+    }
+
+    // @ts-ignore
+    return colors[props.status]
+  }
 </script>

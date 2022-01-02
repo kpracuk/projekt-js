@@ -6,7 +6,7 @@
           class="flex gap-x-1 bg-gray-800 rounded-md px-2 py-1"
           :class="{ 'text-blue-500': data.sorting.property === property }"
           @click="setSorting(property)"
-          v-for="(title, property) in {productName: 'Nazwa Produktu', price: 'Cena', date: 'Data'}"
+          v-for="(title, property) in data.sorting.properties"
           :key="property"
         >
           <span class="font-bold">{{ title }}</span>
@@ -23,43 +23,56 @@
       <UiOrder
         v-for="(order, key) in sortedOrders"
         :key="key"
-        :product-name="order.productName"
-        :price="order.price"
-        :date="order.date"
+        :product-name="order.product.name"
+        :price="order.price_at_buy"
+        :quantity="order.quantity"
+        :date="order.updated_at"
+        :status="order.status"
       />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import {computed, reactive} from 'vue';
+  import { computed, onMounted, reactive } from 'vue';
   import UiOrder from "../components/ui/UiOrder.vue";
+  import { getOrders } from "../api/endpoints/orders";
+  import { notify } from "@kyvg/vue3-notification";
+  import { Order } from "../api/interfaces/orders";
 
   const data = reactive({
+    loading: true,
     sorting: {
-      property: 'date',
-      mode: 'desc'
-    } as { property: string, mode: string },
-    orders: [
-      {
-        productName: 'Nazwa Produktu 1',
-        price: 123,
-        date: '12-12-2020 12:45:32'
-      },
-      {
-        productName: 'Nazwa Produktu 2',
-        price: 132323,
-        date: '12-10-2020 07:45:32'
-      },
-      {
-        productName: 'Nazwa Produktu 3',
-        price: 1223,
-        date: '01-12-2020 13:45:32'
+      property: 'created_at',
+      mode: 'desc',
+      properties: {
+        quantity: 'Ilość',
+        price_at_buy: 'Cena',
+        created_at: 'Data'
       }
-    ] as { [key: string]: string|number }[]
+    },
+    orders: [] as Order[]
   })
 
-  const sortedOrders = computed(() => {
+  onMounted(() => {
+    getOrders()
+      .then(response => {
+        data.orders = response.data
+      })
+      .catch(error => {
+        data.orders = []
+        notify({
+          type: 'error',
+          title: 'Wystąpił błąd',
+          text: 'Nie udało się pobrać zamówień'
+        })
+      })
+      .finally(() => {
+        data.loading = false
+      })
+  })
+
+  const sortedOrders = computed((): Order[] => {
     const property = data.sorting.property
     const mode = data.sorting.mode
     const orders = [...data.orders]
@@ -91,6 +104,8 @@
         }
       })
     }
+
+    return orders
   })
 
   const setSorting = (parameter: string) => {
