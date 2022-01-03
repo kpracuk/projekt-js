@@ -7,6 +7,10 @@ export default [
     component: () => import('../views/Home.vue')
   },
   {
+    path: '/about',
+    component: () => import('../views/About.vue')
+  },
+  {
     path: '/login',
     component: () => import('../views/Login.vue'),
     meta: {

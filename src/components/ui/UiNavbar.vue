@@ -19,8 +19,9 @@
         </RouterLink>
         <div class="hidden sm:block sm:ml-6">
           <div class="flex space-x-4">
-            <router-link to="/products" class="transition text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Produkty</router-link>
-            <router-link to="/orders" class="transition text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Zamówienia</router-link>
+            <router-link to="/products" class="transition text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium" v-if="authStore.isLoggedIn">Produkty</router-link>
+            <router-link to="/orders" class="transition text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium" v-if="authStore.isLoggedIn">Zamówienia</router-link>
+            <router-link to="/about" class="transition text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">O nas</router-link>
           </div>
         </div>
       </div>
@@ -54,8 +55,9 @@
   </div>
   <div class="sm:hidden" v-if="data.navbarOpen">
     <div class="px-2 pt-2 pb-3 space-y-1">
-      <router-link to="/products" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium" @click="data.navbarOpen = false">Produkty</router-link>
-      <router-link to="/orders" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium" @click="data.navbarOpen = false">Zamówienia</router-link>
+      <router-link v-if="authStore.isLoggedIn" to="/products" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium" @click="data.navbarOpen = false">Produkty</router-link>
+      <router-link v-if="authStore.isLoggedIn" to="/orders" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium" @click="data.navbarOpen = false">Zamówienia</router-link>
+      <router-link to="/about" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium" @click="data.navbarOpen = false">O nas</router-link>
     </div>
   </div>
 </nav>
