@@ -22,7 +22,7 @@ import {onMounted, reactive, watch} from "vue";
 
 const props = defineProps({
   modelValue: {
-    type: String,
+    type: [String, Number],
     default: () => ''
   },
   id: {

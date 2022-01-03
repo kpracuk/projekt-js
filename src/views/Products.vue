@@ -33,7 +33,10 @@
         :quantity="product.quantity"
         :price="product.price"
         :buyable="userCanBuy"
+        :product-id="product.id"
+        :disabled="data.buttonsDisabled"
         v-else-if="sortedProducts.length"
+        @item_buy="attemptOrderCreate($event)"
       />
       <div class="flex justify-center mb-2 text-gray-500 font-bold" v-else>
         Brak dostępnych produktów
@@ -45,14 +48,19 @@
 <script lang="ts" setup>
   import { computed, onMounted, reactive } from 'vue';
   import { getProducts } from "../api/endpoints/products";
+  import { createOrder } from "../api/endpoints/orders";
   import UiProduct from "../components/ui/UiProduct.vue";
   import { Product } from "../api/interfaces/products";
   import { notify } from "@kyvg/vue3-notification";
   import { useAuthStore } from "../store/modules/auth";
+  import { CreateOrderRequest } from "../api/interfaces/orders";
+  import { useRouter } from "vue-router";
 
   const authStore = useAuthStore();
+  const router = useRouter();
 
   const data = reactive({
+    buttonsDisabled: false,
     loading: true,
     sorting: {
       property: '',
@@ -66,6 +74,28 @@
     products: [] as Product[]
   })
 
+  const attemptOrderCreate = (event: CreateOrderRequest) => {
+    data.buttonsDisabled = true
+    createOrder(event)
+      .then(response => {
+        notify({
+          type: 'success',
+          title: 'Zamówienie zostało złożone!',
+          text: 'Dziękujemy za korzystanie z naszych usług'
+        })
+        setTimeout(() => {
+          router.push('/orders')
+        }, 300)
+      })
+      .catch(() => {
+        notify({
+          type: 'error',
+          title: 'Wystąpił błąd',
+          text: 'Nie udało się złożyć zamówienia'
+        })
+        data.buttonsDisabled = false
+      })
+  }
 
   onMounted(() => {
     getProducts()
