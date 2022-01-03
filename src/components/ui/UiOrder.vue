@@ -1,12 +1,13 @@
 <template>
-  <div class="flex justify-between w-full p-4 bg-gray-900 rounded-md">
-    <div class="flex flex-col">
+  <div class="flex flex-col sm:flex-row justify-between w-full p-4 bg-gray-900 rounded-md">
+    <div class="flex sm:flex-col justify-between">
       <span class="text-xl font-bold">
-        {{ productName }} {{ orderId }} <span class="text-gray-500 font-normal text-lg">x{{ quantity }}</span>
+        {{ productName }} <span class="text-gray-500 font-normal text-lg">x{{ quantity }}</span>
       </span>
-    </div>
-    <div class="flex items-center gap-x-4">
-      <div class="flex flex-col items-end">
+      <span class="text-gray-400 font-bold">
+        {{ email }}
+      </span>
+      <div class="flex flex-col items-end sm:hidden">
         <span>
           {{ (getFullPrice() / 100).toFixed(2) }} PLN
         </span>
@@ -14,7 +15,17 @@
           {{ (price / 100).toFixed(2) }} PLN x {{ quantity }}
         </span>
       </div>
-      <div class="flex flex-col items-end">
+    </div>
+    <div class="flex justify-between sm:justify-start items-center gap-x-4">
+      <div class="flex flex-col items-end hidden sm:visible">
+        <span>
+          {{ (getFullPrice() / 100).toFixed(2) }} PLN
+        </span>
+        <span class="text-gray-500 text-sm font-bold">
+          {{ (price / 100).toFixed(2) }} PLN x {{ quantity }}
+        </span>
+      </div>
+      <div class="flex flex-col items-start sm:items-end">
         <span>
           {{ getFormattedDate() }}
         </span>
@@ -40,6 +51,7 @@
     quantity: Number,
     date: String,
     status: String,
+    email: String,
     userCanChangeStatus: {
       type: Boolean,
       default: () => false

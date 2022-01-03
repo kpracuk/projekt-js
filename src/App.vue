@@ -1,6 +1,6 @@
 <template>
   <UiNavbar />
-  <RouterView />
+  <RouterView class="px-4" />
   <notifications position="bottom right" />
 </template>
 

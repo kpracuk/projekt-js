@@ -29,6 +29,7 @@
         :quantity="order.quantity"
         :user-can-change-status="userCanChangeStatus"
         :date="order.created_at"
+        :email="order.user.email"
         :status="order.status"
         @status_change="attemptStatusChange($event)"
       />
