@@ -32,6 +32,7 @@
         :description="product.description"
         :quantity="product.quantity"
         :price="product.price"
+        :buyable="userCanBuy"
         v-else-if="sortedProducts.length"
       />
       <div class="flex justify-center mb-2 text-gray-500 font-bold" v-else>
@@ -46,7 +47,10 @@
   import { getProducts } from "../api/endpoints/products";
   import UiProduct from "../components/ui/UiProduct.vue";
   import { Product } from "../api/interfaces/products";
-  import {notify} from "@kyvg/vue3-notification";
+  import { notify } from "@kyvg/vue3-notification";
+  import { useAuthStore } from "../store/modules/auth";
+
+  const authStore = useAuthStore();
 
   const data = reactive({
     loading: true,
@@ -79,6 +83,10 @@
     .finally(() => {
       data.loading = false
     })
+  })
+
+  const userCanBuy = computed((): boolean => {
+    return authStore.hasRole('user')
   })
 
   const sortedProducts = computed((): Product[] => {

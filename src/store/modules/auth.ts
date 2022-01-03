@@ -15,6 +15,12 @@ export const useAuthStore = defineStore('auth', {
     },
     getUser(state) {
       return state.user
+    },
+    getRole(state) {
+      return state.user?.role
+    },
+    hasRole(state) {
+      return (role: string) => state.user?.role === role
     }
   },
   actions: {
