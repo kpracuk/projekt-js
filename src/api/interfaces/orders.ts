@@ -20,3 +20,8 @@ export interface CreateOrderRequest {
   product_id: number,
   quantity: number
 }
+
+export interface UpdateOrderRequest {
+  id: number,
+  status: string
+}

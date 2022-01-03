@@ -2,7 +2,7 @@
   <div class="flex justify-between w-full p-4 bg-gray-900 rounded-md">
     <div class="flex flex-col">
       <span class="text-xl font-bold">
-        {{ productName }} <span class="text-gray-500 font-normal text-lg">x{{ quantity }}</span>
+        {{ productName }} {{ orderId }} <span class="text-gray-500 font-normal text-lg">x{{ quantity }}</span>
       </span>
     </div>
     <div class="flex items-center gap-x-4">
@@ -22,17 +22,37 @@
           {{ getTranslatedStatus() }}
         </span>
       </div>
+      <FormSelect id="status" :options="translations" v-model="status.status" v-if="userCanChangeStatus" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+  import FormSelect from "../form/FormSelect.vue";
+  import { reactive, watch } from "vue";
+
+  const emits = defineEmits(['status_change'])
+
   const props = defineProps({
+    orderId: Number,
     productName: String,
     price: Number,
     quantity: Number,
     date: String,
-    status: String
+    status: String,
+    userCanChangeStatus: {
+      type: Boolean,
+      default: () => false
+    }
+  })
+
+  const status = reactive({
+    status: props.status,
+    id: props.orderId
+  })
+
+  watch(status, (value) => {
+    emits('status_change', value)
   })
 
   const getFormattedDate = () => {
@@ -50,16 +70,16 @@
     return 0
   }
 
-  const getTranslatedStatus = () => {
-    const translations = {
-      placed: 'Złożone',
-      confirmed: 'Potwierdzone',
-      in_progress: 'W realizacji',
-      waiting_for_transport: 'Czeka na transport',
-      sent: 'Wysłane',
-      delivered: 'Dostarczone'
-    }
+  const translations = {
+    placed: 'Złożone',
+    confirmed: 'Potwierdzone',
+    in_progress: 'W realizacji',
+    waiting_for_transport: 'Czeka na transport',
+    sent: 'Wysłane',
+    delivered: 'Dostarczone'
+  }
 
+  const getTranslatedStatus = () => {
     // @ts-ignore
     return translations[props.status]
   }

@@ -22,12 +22,15 @@
       </div>
       <UiOrder
         v-for="(order, key) in sortedOrders"
+        :order-id="order.id"
         :key="key"
         :product-name="order.product.name"
         :price="order.price_at_buy"
         :quantity="order.quantity"
-        :date="order.updated_at"
+        :user-can-change-status="userCanChangeStatus"
+        :date="order.created_at"
         :status="order.status"
+        @status_change="attemptStatusChange($event)"
       />
     </div>
   </div>
@@ -36,9 +39,12 @@
 <script lang="ts" setup>
   import { computed, onMounted, reactive } from 'vue';
   import UiOrder from "../components/ui/UiOrder.vue";
-  import { getOrders } from "../api/endpoints/orders";
+  import { getOrders, updateOrder } from "../api/endpoints/orders";
   import { notify } from "@kyvg/vue3-notification";
-  import { Order } from "../api/interfaces/orders";
+  import { Order, UpdateOrderRequest } from "../api/interfaces/orders";
+  import { useAuthStore } from "../store/modules/auth";
+
+  const authStore = useAuthStore();
 
   const data = reactive({
     loading: true,
@@ -53,6 +59,33 @@
     },
     orders: [] as Order[]
   })
+
+  const userCanChangeStatus = computed(() => {
+    return authStore.hasRole('admin')
+  })
+
+  const attemptStatusChange = (event: UpdateOrderRequest) => {
+    updateOrder(event)
+      .then((response) => {
+        notify({
+          type: 'success',
+          title: 'Pomyślnie zmieniono status',
+          text: 'Status zamówienia został zaktualizowany'
+        })
+        data.orders.forEach((order, key) => {
+          if(order.id === response.data.id) {
+            data.orders[key] = response.data
+          }
+        })
+      })
+      .catch(() => {
+        notify({
+          type: 'error',
+          title: 'Wystąpił błąd',
+          text: 'Nie udało się zmienić statusu'
+        })
+      })
+  }
 
   onMounted(() => {
     getOrders()
