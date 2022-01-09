@@ -5,6 +5,6 @@ export default axios.create({
     'X-Requested-With': 'XMLHttpRequest',
     'Accept': 'application/json'
   },
-  baseURL: 'http://php.test',
+  baseURL: import.meta.env.BASE_URL,
   withCredentials: true
 })
