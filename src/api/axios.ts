@@ -5,6 +5,6 @@ export default axios.create({
     'X-Requested-With': 'XMLHttpRequest',
     'Accept': 'application/json'
   },
-  baseURL: import.meta.env.BASE_URL,
+  baseURL: import.meta.env.VITE_BASE_URL as string || 'http://localhost:8000',
   withCredentials: true
 })
